@@ -5,61 +5,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NovaMindGS</title>
 
-  <link rel="stylesheet" href="style.css">
-  <link rel="manifest" href="manifest.json">
+  <!-- CSS für zentriertes Login -->
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #0f172a;
+      font-family: Arial, sans-serif;
+    }
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Poppins&family=Nunito&family=Inter&display=swap" rel="stylesheet">
+    .login-box {
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      width: 320px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+
+    .login-box input,
+    .login-box button {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      font-size: 14px;
+    }
+  </style>
 </head>
+
 <body>
 
-  <!-- Login Screen -->
-  <div id="login-screen">
-    <img id="login-bg" src="login-background.png" alt="Login Hintergrund" />
-    <div class="login-form">
-      <h1>NovaMindGS</h1>
-      <input type="email" id="email" placeholder="E-Mail">
-      <input type="password" id="password" placeholder="Passwort">
-      <button id="login-btn">Login</button>
-      <button id="register-btn">Registrieren</button>
-      <div id="login-msg"></div>
-    </div>
-  </div>
-
-  <!-- Haupt-App -->
-  <div id="main-app" style="display:none;">
-    <nav class="bottom-nav">
-      <button data-screen="calendar">Kalender</button>
-      <button data-screen="routines">Routinen</button>
-      <button data-screen="home" class="active">Home</button>
-      <button data-screen="todo">To-Do</button>
-      <button data-screen="profile">Profil</button>
-    </nav>
-
-    <div id="screen-content">
-      <div id="home-screen" class="screen active">
-        <h2>Heute</h2>
-        <div id="today-appointments">Termine</div>
-        <div id="today-routines">Routinen</div>
-        <div id="today-todos">To-Dos</div>
-      </div>
-
-      <div id="calendar-screen" class="screen">Kalender</div>
-      <div id="routines-screen" class="screen">Routinen</div>
-      <div id="todo-screen" class="screen">To-Do</div>
-
-      <div id="profile-screen" class="screen">
-        <h2>Profil & Design</h2>
-        <label for="font-select">Schriftart:</label>
-        <select id="font-select">
-          <option value="'Century Gothic', sans-serif">Century Gothic</option>
-          <option value="Montserrat, sans-serif">Montserrat</option>
-          <option value="Poppins, sans-serif">Poppins</option>
-          <option value="Nunito, sans-serif">Nunito</option>
-          <option value="Inter, sans-serif">Inter</option>
-        </select>
-      </div>
-    </div>
+  <!-- Login Wrapper -->
+  <div class="login-box">
+    <h1>NovaMindGS</h1>
+    <input type="email" id="email" placeholder="E-Mail">
+    <input type="password" id="password" placeholder="Passwort">
+    <button id="login-btn">Login</button>
+    <button id="register-btn">Registrieren</button>
   </div>
 
   <!-- Firebase SDKs -->
@@ -67,96 +52,75 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-  <!-- Firebase Config + Init -->
+  <!-- Firebase Config -->
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyA8TpIvsBtQQbH4qGpmNoOiDTpokQBR0NY",
       authDomain: "novamind-gs.firebaseapp.com",
-      databaseURL: "https://novamind-gs-default-rtdb.europe-west1.firebasedatabase.app/",
+      databaseURL: "https://novamind-gs-default-rtdb.europe-west1.firebasedatabase.app",
       projectId: "novamind-gs",
       storageBucket: "novamind-gs.firebasestorage.app",
       messagingSenderId: "278309634253",
       appId: "1:278309634253:web:2c0cb4a88e0e2293192984"
     };
 
+    // Firebase initialisieren
     firebase.initializeApp(firebaseConfig);
 
+    // Objekte für Auth & Database
     const auth = firebase.auth();
     const database = firebase.database();
   </script>
 
-  <!-- App-Funktionalität: Login & Register -->
-  <script>
-    const loginScreen = document.getElementById("login-screen");
-    const mainApp = document.getElementById("main-app");
-    const loginMsg = document.getElementById("login-msg");
-
-    const emailInput = document.getElementById("email");
-    const passwordInput = document.getElementById("password");
-    const loginBtn = document.getElementById("login-btn");
-    const registerBtn = document.getElementById("register-btn");
-
-    // Login
-    loginBtn.addEventListener("click", () => {
-      const email = emailInput.value;
-      const password = passwordInput.value;
-
-      auth.signInWithEmailAndPassword(email, password)
-        .then(userCredential => {
-          loginMsg.textContent = "Erfolgreich eingeloggt!";
-          showMainApp();
-        })
-        .catch(error => {
-          loginMsg.textContent = "Fehler: " + error.message;
-        });
-    });
-
-    // Register
-    registerBtn.addEventListener("click", () => {
-      const email = emailInput.value;
-      const password = passwordInput.value;
-
-      auth.createUserWithEmailAndPassword(email, password)
-        .then(userCredential => {
-          loginMsg.textContent = "Account erstellt!";
-          showMainApp();
-        })
-        .catch(error => {
-          loginMsg.textContent = "Fehler: " + error.message;
-        });
-    });
-
-    // Zeige Haupt-App
-    function showMainApp() {
-      loginScreen.style.display = "none";
-      mainApp.style.display = "block";
-    }
-
-    // Auth-State Listener
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        showMainApp();
-      } else {
-        loginScreen.style.display = "block";
-        mainApp.style.display = "none";
-      }
-    });
-  </script>
-
-  <!-- Test: Firebase laden -->
+  <!-- Test: Funktioniert Firebase? -->
   <script>
     console.log("Firebase Apps geladen:", firebase.apps.length);
     console.log("Auth Objekt vorhanden:", !!auth);
     console.log("Database Objekt vorhanden:", !!database);
-
-    // Database Test
-    const testRef = database.ref("test");
-    testRef.set({ ok: true })
-      .then(() => console.log("Database Test erfolgreich"))
-      .catch(err => console.error("Database Test Fehler:", err));
   </script>
-  
-<script src="app.js"></script>
+
+  <!-- Login + Registrierung -->
+  <script>
+    const loginBtn = document.getElementById("login-btn");
+    const registerBtn = document.getElementById("register-btn");
+
+    loginBtn.addEventListener("click", () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          console.log("Login erfolgreich:", userCredential.user.email);
+          alert("Login erfolgreich: " + userCredential.user.email);
+        })
+        .catch((error) => {
+          console.error("Login Fehler:", error.message);
+          alert("Login Fehler: " + error.message);
+        });
+    });
+
+    registerBtn.addEventListener("click", () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      auth.createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          console.log("Registrierung erfolgreich:", userCredential.user.email);
+          alert("Registrierung erfolgreich: " + userCredential.user.email);
+
+          // Benutzer in Realtime Database speichern
+          const userId = userCredential.user.uid;
+          database.ref("users/" + userId).set({
+            email: email,
+            createdAt: new Date().toISOString()
+          });
+        })
+        .catch((error) => {
+          console.error("Registrierung Fehler:", error.message);
+          alert("Registrierung Fehler: " + error.message);
+        });
+    });
+  </script>
 
 </body>
 </html>
