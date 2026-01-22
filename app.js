@@ -10,10 +10,9 @@ const fontSelect = document.getElementById("font-select");
 
 const navButtons = document.querySelectorAll(".nav-btn");
 
-// Login Status
 let isLoggedIn = false;
 
-// Tagesübersicht-Kacheln
+// Beispiel-Daten für Home-Kacheln
 let homeCardsData = [
   { type: "tasks", title: "ToDos", tasks: [
       { text: "E-Mail beantworten", done: false },
@@ -24,8 +23,8 @@ let homeCardsData = [
       { text: "Workout", done: false }
     ]},
   { type: "calendar", title: "Kalender", tasks: [
-      { text: "Projektbesprechung 10:00", done: false },
-      { text: "Arzttermin 15:30", done: false }
+      { text: "10:00 Projektbesprechung", done: false },
+      { text: "15:30 Arzttermin", done: false }
     ]},
   { type: "motivation", title: "Motivation", quote: "Du schaffst alles, was du dir vornimmst!"}
 ];
@@ -60,12 +59,14 @@ function renderHomeCards() {
       card.tasks.forEach((task) => {
         const taskDiv = document.createElement("div");
         taskDiv.classList.add("card-task");
+        if(task.done) taskDiv.classList.add("completed");
 
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.checked = task.done;
         checkbox.addEventListener("change", () => {
           task.done = checkbox.checked;
+          taskDiv.classList.toggle("completed", task.done);
         });
 
         const label = document.createElement("label");
