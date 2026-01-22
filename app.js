@@ -28,7 +28,7 @@ navButtons.forEach(btn => {
 // Auth Status prüfen
 auth.onAuthStateChanged(user => {
   if(user) {
-    // NEU: Sanfter Übergang Login → Home
+    // Sanfter Übergang Login → Home + Schwebeeffekt
     loginScreen.style.opacity = 1;
     loginScreen.style.transition = "opacity 0.6s ease-in-out";
     loginScreen.style.opacity = 0;
@@ -37,7 +37,7 @@ auth.onAuthStateChanged(user => {
       loginScreen.style.display = "none";
       homeScreen.classList.add("active");
       document.querySelector(".bottom-nav").style.display = "flex";
-    }, 600); // entspricht der Transition Dauer
+    }, 600);
   } else {
     loginScreen.style.display = "flex";
     loginScreen.style.opacity = 1;
@@ -53,7 +53,6 @@ loginBtn.addEventListener("click", () => {
   auth.signInWithEmailAndPassword(email, password)
     .then(userCredential => {
       console.log("Login erfolgreich:", userCredential.user.email);
-      // Übergang passiert automatisch
     })
     .catch(error => alert("Login Fehler: " + error.message));
 });
