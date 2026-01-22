@@ -7,7 +7,7 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Century Gothic', sans-serif;
   background: url('login-background.png') no-repeat center center/cover;
   box-sizing: border-box;
   color: #fff;
@@ -38,14 +38,15 @@ html, body {
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
   box-shadow: 0 4px 14px rgba(0,0,0,0.25);
   border: 2px solid rgba(255,255,255,0.4);
 }
 
 .login-form input {
-  width: 100%;
-  margin: 8px 0;
+  width: 90%;
+  margin: 12px auto;
+  display: block;
   padding: 12px;
   border-radius: 10px;
   border: none;
@@ -54,10 +55,14 @@ html, body {
   font-size: 16px;
 }
 
+.login-form input::placeholder {
+  color: #fff;
+}
+
 .button-row {
   display: flex;
   gap: 10px;
-  margin-top: 12px;
+  margin-top: 16px;
 }
 
 .button-row button {
@@ -68,6 +73,7 @@ html, body {
   padding: 12px;
   font-size: 16px;
   cursor: pointer;
+  color: #fff;
   transition: background 0.3s ease;
 }
 
@@ -105,13 +111,12 @@ html, body {
   -webkit-backdrop-filter: blur(14px);
   border-radius: 18px;
   padding: 14px 16px;
-  cursor: pointer;
+  cursor: grab;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.home-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+.home-card:active {
+  cursor: grabbing;
 }
 
 .card-title {
@@ -150,7 +155,7 @@ html, body {
   position: fixed;
   bottom: 0;
   width: 100%;
-  padding: 8px 12px;
+  padding: 8px 6px;
   background: rgba(0,0,0,0.25);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -162,6 +167,11 @@ html, body {
   padding: 10px;
   cursor: pointer;
   border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  margin: 0 2px;
 }
 
 .nav-btn svg {
@@ -180,7 +190,7 @@ html, body {
   padding: 20px;
 }
 
-.settings-buttons button {
+.settings-buttons button, .settings-buttons select {
   padding: 12px;
   border-radius: 12px;
   border: none;
@@ -188,11 +198,10 @@ html, body {
   color: #fff;
   cursor: pointer;
   font-size: 16px;
-  transition: background 0.3s ease;
 }
 
-.settings-buttons button:hover {
-  background: rgba(50,160,100,1);
+.settings-buttons select {
+  appearance: none;
 }
 
 /* RESPONSIVE */
