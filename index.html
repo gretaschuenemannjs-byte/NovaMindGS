@@ -25,10 +25,16 @@
 <div class="screen" id="home-screen">
   <div class="home-title">
     <h2 id="current-date"></h2>
+    <div class="calendar-view-selector">
+      <label for="calendar-view">Ansicht:</label>
+      <select id="calendar-view">
+        <option value="day" selected>Tag</option>
+        <option value="week">Woche</option>
+        <option value="month">Monat</option>
+      </select>
+    </div>
   </div>
-  <div class="home-cards" id="home-cards">
-    <!-- Kacheln per JS generiert -->
-  </div>
+  <div class="home-cards" id="home-cards"></div>
 </div>
 
 <!-- SETTINGS SCREEN -->
@@ -50,7 +56,9 @@
 <div class="bottom-nav">
   <button class="nav-btn" data-target="notes-screen" title="Notizen">
     <svg viewBox="0 0 24 24" width="24" height="24" stroke="#fff" fill="none" stroke-width="2">
-      <path d="M4 6h16M4 12h16M4 18h16"/>
+      <line x1="4" y1="6" x2="20" y2="6"/>
+      <line x1="4" y1="12" x2="20" y2="12"/>
+      <line x1="4" y1="18" x2="20" y2="18"/>
     </svg>
   </button>
   <button class="nav-btn" data-target="todos-screen" title="To-Dos">
