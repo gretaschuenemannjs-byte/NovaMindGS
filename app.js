@@ -7,23 +7,16 @@ const logoutBtn = document.getElementById("logout-btn");
 const homeCardsContainer = document.getElementById("home-cards");
 const currentDateEl = document.getElementById("current-date");
 const fontSelect = document.getElementById("font-select");
-const calendarView = document.getElementById("calendar-view");
 
 const navButtons = document.querySelectorAll(".nav-btn");
 
 let isLoggedIn = false;
 
-// Beispiel-Daten für Home-Kacheln
+// Home-Kacheln Daten
 let homeCardsData = [
-  { type: "tasks", title: "ToDos", tasks: [
-      { text: "E-Mail beantworten", done: false },
-      { text: "Meeting vorbereiten", done: false }
-    ]},
-  { type: "routines", title: "Routinen", tasks: [
-      { text: "Meditation", done: false },
-      { text: "Workout", done: false }
-    ]},
-  { type: "calendar", title: "Kalender", tasks: [
+  { type: "tasks", title: "ToDos", tasks: [{ text: "E-Mail beantworten", done: false }, { text: "Meeting vorbereiten", done: false }]},
+  { type: "routines", title: "Routinen", tasks: [{ text: "Meditation", done: false }, { text: "Workout", done: false }]},
+  { type: "calendar", title: "Kalender", view: "day", tasks: [
       { text: "10:00 Projektbesprechung", done: false },
       { text: "15:30 Arzttermin", done: false }
     ]},
@@ -53,17 +46,52 @@ function renderHomeCards() {
     const content = document.createElement("div");
     content.classList.add("card-content");
 
-    if(card.type === "motivation") {
+    // Kalender-Icons
+    if(card.type === "calendar") {
+      const iconBar = document.createElement("div");
+      iconBar.classList.add("calendar-view-icons");
+
+      const views = ["month", "week", "day"];
+      views.forEach(v => {
+        const btn = document.createElement("button");
+        btn.innerHTML = v==="month"? "▦": v==="week"? "▮▮▮▮▮▮▮":"▬▬▬▬▬";
+        btn.classList.toggle("active", card.view === v);
+        btn.addEventListener("click", ()=>{ card.view=v; renderHomeCards(); });
+        iconBar.appendChild(btn);
+      });
+      div.appendChild(iconBar);
+
+      // Darstellung der Tasks je nach Ansicht
+      if(card.view === "day") {
+        content.innerHTML = "";
+        for(let i=0;i<24;i++){
+          const hourDiv = document.createElement("div");
+          hourDiv.textContent = `${i}:00 - ${i+1}:00`;
+          content.appendChild(hourDiv);
+        }
+      } else if(card.view === "week") {
+        const weekDiv = document.createElement("div");
+        weekDiv.style.display = "flex"; weekDiv.style.gap="2px";
+        for(let i=0;i<7;i++){
+          const dayCol = document.createElement("div");
+          dayCol.style.flex="1"; dayCol.style.border="1px solid rgba(255,255,255,0.3)"; dayCol.style.height="80px";
+          weekDiv.appendChild(dayCol);
+        }
+        content.appendChild(weekDiv);
+      } else if(card.view === "month") {
+        const monthDiv = document.createElement("div");
+        monthDiv.style.display="grid"; monthDiv.style.gridTemplateColumns="repeat(7,1fr)"; monthDiv.style.gap="2px";
+        for(let i=0;i<30;i++){
+          const dayCell = document.createElement("div");
+          dayCell.style.border="1px solid rgba(255,255,255,0.3)"; dayCell.style.height="40px";
+          monthDiv.appendChild(dayCell);
+        }
+        content.appendChild(monthDiv);
+      }
+
+    } else if(card.type === "motivation") {
       content.classList.add("motivation-card");
       content.textContent = card.quote;
-    } else if(card.type === "calendar") {
-      // Tagesübersicht
-      content.innerHTML = `<div>Kalender-Ansicht (${calendarView.value})</div>`;
-      card.tasks.forEach(t => {
-        const taskDiv = document.createElement("div");
-        taskDiv.textContent = t.text;
-        content.appendChild(taskDiv);
-      });
     } else {
       card.tasks.forEach((task) => {
         const taskDiv = document.createElement("div");
@@ -127,9 +155,6 @@ fontSelect.addEventListener("change", () => {
   document.body.style.fontFamily = fontSelect.value;
 });
 
-// Kalenderansicht wechseln
-calendarView.addEventListener("change", () => renderHomeCards());
-
 // UI updaten
 function updateUI() {
   if(isLoggedIn) {
@@ -156,4 +181,3 @@ logoutBtn.addEventListener("click", () => { isLoggedIn = false; updateUI(); });
 
 // Initial
 updateUI();
-
